@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: postgresql
+
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        
+    spec:
+      volumes:
+      - name: postgresql-persistent-storage
+        persistentVolumeClaim:
+          claimName: postgresql-pv-claim
+      containers:
+        - name: postgresql
+          image: postgres:latest  # Use "postgres" image for PostgreSQL
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgresql-persistent-storage
+              mountPath: /var/lib/postgresql/data  # Use the correct path for PostgreSQL data
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD  # Use POSTGRES_PASSWORD for PostgreSQL root password
+              value: postgres
+            - name: POSTGRES_DB  # Use POSTGRES_DB for PostgreSQL database name
+              value: tododb
+            - name: POSTGRES_PORT
+              value: "5432"
+          
+          
+

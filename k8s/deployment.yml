@@ -37,4 +37,12 @@ spec:
         envFrom:
         - configMapRef:
             name: flask-config
-          
+
+      initContainers:                               #this is why because our application completly migrate the database
+      - name: migration-container
+        image: developer9844/webapp:1.2
+        imagePullPolicy: "IfNotPresent"
+        command: ["flask", "db", "upgrade"]
+        envFrom:
+        - configMapRef:
+            name: flask-config
